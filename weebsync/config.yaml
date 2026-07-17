@@ -1,0 +1,49 @@
+name: WeebSync
+version: "0.1.0"
+slug: weebsync
+description: Download & sync anime folders from your own S/FTP servers — AniList/TMDB catalog, download manager, rename engine
+url: https://github.com/ZSleyer/WeebSync-Addon
+arch:
+  - aarch64
+  - amd64
+init: false
+startup: services
+boot: auto
+host_network: false
+webui: "http://[HOST]:[PORT:8080]"
+ports:
+  8080/tcp: 42380
+ports_description:
+  8080/tcp: WeebSync Web UI
+map:
+  - addon_config:rw
+  - media:rw
+  - share:rw
+options:
+  tz: UTC
+  downloads_dir: /media/weebsync
+  trusted_proxy: false
+  force_https: false
+  base_url: ""
+  secret: ""
+  anilist_token: ""
+  oidc_issuer: ""
+  oidc_client_id: ""
+  oidc_client_secret: ""
+  oidc_redirect_url: ""
+  oidc_provider_name: ""
+  oidc_admin_values: ""
+schema:
+  tz: str?
+  downloads_dir: str?
+  trusted_proxy: bool?
+  force_https: bool?
+  base_url: str?
+  secret: password?
+  anilist_token: password?
+  oidc_issuer: str?
+  oidc_client_id: str?
+  oidc_client_secret: password?
+  oidc_redirect_url: str?
+  oidc_provider_name: str?
+  oidc_admin_values: str?

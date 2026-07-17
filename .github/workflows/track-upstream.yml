@@ -1,0 +1,57 @@
+name: track-upstream
+
+# Bumps the add-on version whenever the tracked upstream image digest changes,
+# so Home Assistant surfaces it as an available update. The tag it follows is
+# read from weebsync/build.yaml (WEEBSYNC_IMAGE) — currently :dev.
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [weebsync/build.yaml]
+
+permissions:
+  contents: write
+
+concurrency: track-upstream
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve upstream digest
+        id: up
+        run: |
+          set -euo pipefail
+          IMAGE=$(sed -n 's/.*WEEBSYNC_IMAGE: *//p' weebsync/build.yaml | head -1)
+          REPO=${IMAGE%:*}; TAG=${IMAGE##*:}
+          PATH_=${REPO#ghcr.io/}
+          echo "image=$IMAGE"
+          TOKEN=$(curl -s "https://ghcr.io/token?scope=repository:${PATH_}:pull" | jq -r .token)
+          DIGEST=$(curl -sI \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.oci.image.index.v1+json" \
+            "https://ghcr.io/v2/${PATH_}/manifests/${TAG}" \
+            | tr -d '\r' | awk -F': ' 'tolower($1)=="docker-content-digest"{print $2}')
+          [ -n "$DIGEST" ] || { echo "no digest resolved"; exit 1; }
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+
+      - name: Bump version if changed
+        run: |
+          set -euo pipefail
+          NEW="${{ steps.up.outputs.digest }}"
+          CUR=$(cat weebsync/.upstream-digest 2>/dev/null || echo "")
+          if [ "$NEW" = "$CUR" ]; then
+            echo "digest unchanged — nothing to do"
+            exit 0
+          fi
+          VER=$(date -u +%Y.%-m.%d%H%M%S)
+          sed -i -E "s/^version: .*/version: \"$VER\"/" weebsync/config.yaml
+          printf '%s\n' "$NEW" > weebsync/.upstream-digest
+          git config user.name "weebsync-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: track upstream $VER ($NEW)"
+          git push
