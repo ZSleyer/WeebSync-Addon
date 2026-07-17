@@ -20,7 +20,7 @@ map:
   - media:rw
   - share:rw
 options:
-  tz: UTC
+  tz: Europe/Berlin
   downloads_dir: /media/weebsync
   trusted_proxy: false
   force_https: false
@@ -32,7 +32,9 @@ options:
   oidc_client_secret: ""
   oidc_redirect_url: ""
   oidc_provider_name: ""
+  oidc_claim: ""
   oidc_admin_values: ""
+  oidc_user_values: ""
 schema:
   tz: str?
   downloads_dir: str?
@@ -46,4 +48,6 @@ schema:
   oidc_client_secret: password?
   oidc_redirect_url: str?
   oidc_provider_name: str?
+  oidc_claim: str?
   oidc_admin_values: str?
+  oidc_user_values: str?

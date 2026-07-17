@@ -27,7 +27,9 @@ set_if oidc_client_id    OIDC_CLIENT_ID
 set_if oidc_client_secret OIDC_CLIENT_SECRET
 set_if oidc_redirect_url OIDC_REDIRECT_URL
 set_if oidc_provider_name OIDC_PROVIDER_NAME
+set_if oidc_claim         OIDC_CLAIM
 set_if oidc_admin_values  OIDC_ADMIN_VALUES
+set_if oidc_user_values   OIDC_USER_VALUES
 
 [ "$(opt trusted_proxy false)" = "true" ] && export WEEBSYNC_TRUSTED_PROXY=true || true
 [ "$(opt force_https false)"   = "true" ] && export WEEBSYNC_FORCE_HTTPS=true   || true
