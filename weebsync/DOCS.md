@@ -35,7 +35,7 @@ lock the field.
 | `base_url` | Public URL, e.g. `https://weebsync.example.com` |
 | `secret` | AES-GCM key for stored server passwords. Empty = auto-generated in `/config/secret.key` |
 | `anilist_token` | AniList API token (higher rate limit) |
-| `oidc_*` | Generic OIDC login (issuer, client id/secret, redirect URL, provider name, admin values) |
+| `oidc_*` | Generic OIDC login: issuer, client id/secret, redirect URL, provider name, and role mapping via `oidc_claim` (e.g. `groups`) + `oidc_admin_values`/`oidc_user_values` (comma-separated) |
 
 ### Behind a reverse proxy + OIDC
 
