@@ -2,6 +2,6 @@ build_from:
   aarch64: ghcr.io/hassio-addons/base:stable
   amd64: ghcr.io/hassio-addons/base:stable
 args:
-  WEEBSYNC_IMAGE: ghcr.io/zsleyer/weebsync:dev
+  WEEBSYNC_IMAGE: ghcr.io/zsleyer/weebsync:nightly
 labels:
   org.opencontainers.image.source: https://github.com/ZSleyer/WeebSync
