@@ -1,0 +1,64 @@
+#include <tunables/global>
+
+# AppArmor profile for the WeebSync add-on. Home Assistant loads this file
+# automatically (its presence flips the add-on from "unconfined" to confined)
+# and applies it to the container. Single flat profile — the add-on runs its
+# own entrypoint (init: false), no s6 child transitions to model.
+profile weebsync flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+  #include <abstractions/ssl_certs>
+
+  # --- host-escape denials (defence in depth on top of the container's own
+  #     dropped capabilities / seccomp) ---
+  deny /proc/sysrq-trigger rwklx,
+  deny /proc/kcore rwklx,
+  deny /proc/kmem rwklx,
+  deny @{PROC}/@{pid}/mem rwklx,
+  deny /sys/firmware/** rwklx,
+  deny /sys/kernel/security/** rwklx,
+  deny mount,
+  deny umount,
+  deny ptrace,
+
+  # network + whatever minimal caps the supervisor still grants (it already
+  # drops to a least-privilege set; this profile does not widen that)
+  network,
+  capability,
+
+  # --- executables ---
+  /usr/bin/run-weebsync.sh r,
+  /bin/busybox mrix,
+  /bin/sh mrix,
+  /usr/bin/jq mrix,
+  /usr/bin/weebsync mrix,
+
+  # runtime linker + libraries (musl on Alpine base)
+  /lib/** mr,
+  /usr/lib/** mr,
+  /etc/** r,
+
+  # --- data & mapped volumes (config = sqlite DB + secret.key, media/share =
+  #     download targets, data = options.json) ---
+  /data/** rw,
+  /config/** rw,
+  /media/** rw,
+  /share/** rw,
+  /web/** r,
+  /tmp/** rw,
+
+  # timezone data (TZ option)
+  /usr/share/zoneinfo/** r,
+
+  # runtime introspection the Go runtime / musl need
+  @{PROC}/ r,
+  @{PROC}/@{pid}/ r,
+  @{PROC}/@{pid}/status r,
+  @{PROC}/@{pid}/fd/ r,
+  @{PROC}/sys/kernel/hostname r,
+  @{PROC}/sys/net/core/somaxconn r,
+
+  /dev/urandom r,
+  /dev/null rw,
+  /dev/tty rw,
+}

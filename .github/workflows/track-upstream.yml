@@ -2,7 +2,7 @@ name: track-upstream
 
 # Bumps the add-on version whenever the tracked upstream image digest changes,
 # so Home Assistant surfaces it as an available update. The tag it follows is
-# read from weebsync/build.yaml (WEEBSYNC_IMAGE) — currently :dev.
+# read from weebsync/build.yaml (WEEBSYNC_IMAGE) — currently :nightly.
 on:
   schedule:
     - cron: "*/30 * * * *"
@@ -20,7 +20,7 @@ jobs:
   bump:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Resolve upstream digest
         id: up
@@ -40,9 +40,12 @@ jobs:
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
 
       - name: Bump version if changed
+        env:
+          # pass step output via env, never interpolate ${{ }} into the shell body
+          # (github/code-injection): quoting here makes the value inert
+          NEW: ${{ steps.up.outputs.digest }}
         run: |
           set -euo pipefail
-          NEW="${{ steps.up.outputs.digest }}"
           CUR=$(cat weebsync/.upstream-digest 2>/dev/null || echo "")
           if [ "$NEW" = "$CUR" ]; then
             echo "digest unchanged — nothing to do"
