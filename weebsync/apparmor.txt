@@ -56,6 +56,7 @@ profile weebsync flags=(attach_disconnected,mediate_deleted) {
   @{PROC}/@{pid}/ r,
   @{PROC}/@{pid}/status r,
   @{PROC}/@{pid}/fd/ r,
+  @{PROC}/*/cgroup r,          # Go runtime reads cgroup CPU quota for GOMAXPROCS
   @{PROC}/sys/kernel/hostname r,
   @{PROC}/sys/net/core/somaxconn r,
 
