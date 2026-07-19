@@ -26,6 +26,10 @@ profile weebsync flags=(attach_disconnected,mediate_deleted) {
   network,
   capability,
 
+  # accept container-lifecycle signals from the runtime (runc stop/kill) and
+  # own processes; without this a restart logs spurious signal denials
+  signal,
+
   # --- executables ---
   /usr/bin/run-weebsync.sh r,
   /bin/busybox mrix,
@@ -57,6 +61,8 @@ profile weebsync flags=(attach_disconnected,mediate_deleted) {
   @{PROC}/@{pid}/status r,
   @{PROC}/@{pid}/fd/ r,
   @{PROC}/*/cgroup r,          # Go runtime reads cgroup CPU quota for GOMAXPROCS
+  @{PROC}/*/mountinfo r,       # disk-mount self-heal inspects mounts
+  @{PROC}/*/mounts r,
   @{PROC}/sys/kernel/hostname r,
   @{PROC}/sys/net/core/somaxconn r,
 
