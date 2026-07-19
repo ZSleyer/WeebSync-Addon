@@ -44,13 +44,24 @@ profile weebsync flags=(attach_disconnected,mediate_deleted) {
 
   # --- data & mapped volumes (config = sqlite DB + secret.key, media/share =
   #     download targets, data = options.json). 'k' = file locking, which SQLite
-  #     needs on the DB/WAL/journal (without it: SQLITE_BUSY crash-loop). ---
+  #     needs on the DB/WAL/journal (without it: SQLITE_BUSY crash-loop). The
+  #     bare-dir rule ('/x/ r') is needed to opendir the mount root — '/x/**'
+  #     matches contents but not the directory itself. ---
+  /data/ r,
   /data/** rwk,
+  /config/ r,
   /config/** rwk,
+  /media/ r,
   /media/** rwk,
+  /share/ r,
   /share/** rwk,
+  /web/ r,
   /web/** r,
+  /tmp/ r,
   /tmp/** rwk,
+
+  # cgroup v2: Go runtime reads cpu.max / memory.max to size GOMAXPROCS/GOMEMLIMIT
+  /sys/fs/cgroup/** r,
 
   # timezone data (TZ option)
   /usr/share/zoneinfo/** r,
