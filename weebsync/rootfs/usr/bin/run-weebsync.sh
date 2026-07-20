@@ -34,6 +34,10 @@ set_if oidc_user_values   OIDC_USER_VALUES
 [ "$(opt trusted_proxy false)" = "true" ] && export WEEBSYNC_TRUSTED_PROXY=true || true
 [ "$(opt force_https false)"   = "true" ] && export WEEBSYNC_FORCE_HTTPS=true   || true
 
-mkdir -p "$WEEBSYNC_DOWNLOADS"
+# downloads_dir may be a ":"-separated allowlist of roots (e.g. "/media:/share")
+# so targets can live under any mounted path; create each one.
+OLDIFS=$IFS; IFS=:
+for d in $WEEBSYNC_DOWNLOADS; do [ -n "$d" ] && mkdir -p "$d"; done
+IFS=$OLDIFS
 echo "[weebsync] data=$WEEBSYNC_DATA downloads=$WEEBSYNC_DOWNLOADS oidc=${OIDC_ISSUER:-off}"
 exec /usr/bin/weebsync
