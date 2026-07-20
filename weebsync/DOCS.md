@@ -18,7 +18,9 @@ This add-on wraps the prebuilt image `ghcr.io/zsleyer/weebsync` — see
 ## Data
 
 - `/config` (add-on config) — SQLite DB + `secret.key` (auto-generated, **back it up**)
-- `downloads_dir` — where downloads land (default `/media/weebsync`)
+- `downloads_dir` — where downloads land (default `/media/weebsync`). Accepts a
+  single path, or a `:`-separated allowlist of roots (e.g. `/media:/share`) to
+  let targets live under any mounted path; the first is the default download root.
 
 ## Options
 
@@ -29,7 +31,7 @@ lock the field.
 | Option | Purpose |
 |---|---|
 | `tz` | Timezone for log timestamps (e.g. `Europe/Berlin`) |
-| `downloads_dir` | Download root (mapped to `media`/`share`) |
+| `downloads_dir` | Download root, or `:`-separated roots (mapped to `media`/`share`) |
 | `trusted_proxy` | Trust `X-Forwarded-*` — enable when behind a reverse proxy |
 | `force_https` | Force the `Secure` flag on cookies — enable behind a TLS proxy |
 | `base_url` | Public URL, e.g. `https://weebsync.example.com` |
