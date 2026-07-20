@@ -1,5 +1,5 @@
 name: WeebSync
-version: "2026.7.20140904"
+version: "2026.7.20151206"
 slug: weebsync
 description: Download & sync anime folders from your own S/FTP servers — AniList/TMDB catalog, download manager, rename engine
 url: https://github.com/ZSleyer/WeebSync-Addon
