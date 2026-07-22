@@ -5,9 +5,11 @@ ARG WEEBSYNC_IMAGE=ghcr.io/zsleyer/weebsync:dev
 # WeebSync app image (static Go binary + prebuilt web assets)
 FROM ${WEEBSYNC_IMAGE} AS app
 
-# HA add-on wrapper: base has a shell + jq to map options.json → env
+# HA add-on wrapper: base has a shell + jq to map options.json → env.
+# ffmpeg gives ffprobe, used to read the true resolution / audio / subtitle
+# tracks of media whose file names lack those tokens.
 FROM ${BUILD_FROM}
-RUN apk add --no-cache jq tzdata
+RUN apk add --no-cache jq tzdata ffmpeg
 
 COPY --from=app /weebsync /usr/bin/weebsync
 COPY --from=app /web /web
