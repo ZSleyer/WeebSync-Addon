@@ -1,0 +1,25 @@
+version: 2
+
+# The add-on builds nothing of its own: it wraps a prebuilt upstream image,
+# whose tag track-upstream.yml follows. What is left to keep current are the
+# actions and the Home Assistant base image.
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: docker
+    directory: /weebsync
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    groups:
+      images:
+        patterns: ["*"]
