@@ -10,7 +10,7 @@ This add-on wraps the prebuilt image `ghcr.io/zsleyer/weebsync`, see
 
 ## Installation
 
-1. Add this repository to the add-on store (Settings → Add-ons → Store → ⋮ → Repositories):
+1. Add this repository to the add-on store (Settings > Add-ons > Store > three-dot menu > Repositories):
    `https://github.com/ZSleyer/WeebSync-Addon`
 2. Install **WeebSync**, start it, open the Web UI.
 3. The first registered user becomes admin. Configure servers/rename in the UI.

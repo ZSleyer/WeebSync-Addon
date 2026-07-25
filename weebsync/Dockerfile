@@ -1,11 +1,13 @@
 # Global build args (must precede the first FROM to be usable in FROM lines)
 ARG BUILD_FROM
-ARG WEEBSYNC_IMAGE=ghcr.io/zsleyer/weebsync:dev
+# the fallback only applies to a bare `docker build`; the add-on build passes
+# WEEBSYNC_IMAGE from build.yaml. Keep the two in step: :dev no longer exists.
+ARG WEEBSYNC_IMAGE=ghcr.io/zsleyer/weebsync:nightly
 
 # WeebSync app image (static Go binary + prebuilt web assets)
 FROM ${WEEBSYNC_IMAGE} AS app
 
-# HA add-on wrapper: base has a shell + jq to map options.json → env.
+# HA add-on wrapper: base has a shell + jq to map options.json onto env vars.
 # ffmpeg gives ffprobe, used to read the true resolution / audio / subtitle
 # tracks of media whose file names lack those tokens.
 FROM ${BUILD_FROM}
