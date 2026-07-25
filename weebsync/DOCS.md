@@ -1,11 +1,11 @@
 # WeebSync
 
-Download & sync anime folders from your own S/FTP servers - with an AniList/TMDB
+Download & sync anime folders from your own S/FTP servers, with an AniList/TMDB
 metadata catalog, a download manager with live speed throttling, and a rename engine.
 
 > **Early, use at your own risk.** Not a mature or well-tested app.
 
-This add-on wraps the prebuilt image `ghcr.io/zsleyer/weebsync` - see
+This add-on wraps the prebuilt image `ghcr.io/zsleyer/weebsync`, see
 [ZSleyer/WeebSync](https://github.com/ZSleyer/WeebSync).
 
 ## Installation
@@ -17,8 +17,8 @@ This add-on wraps the prebuilt image `ghcr.io/zsleyer/weebsync` - see
 
 ## Data
 
-- `/config` (add-on config) - SQLite DB + `secret.key` (auto-generated, **back it up**)
-- `downloads_dir` - where downloads land (default `/media/weebsync`). Accepts a
+- `/config` (add-on config): SQLite DB + `secret.key` (auto-generated, **back it up**)
+- `downloads_dir`: where downloads land (default `/media/weebsync`). Accepts a
   single path, or a `:`-separated allowlist of roots (e.g. `/media:/share`) to
   let targets live under any mounted path; the first is the default download root.
 
@@ -32,8 +32,8 @@ lock the field.
 |---|---|
 | `tz` | Timezone for log timestamps (e.g. `Europe/Berlin`) |
 | `downloads_dir` | Download root, or `:`-separated roots (mapped to `media`/`share`) |
-| `trusted_proxy` | Trust `X-Forwarded-*` - enable when behind a reverse proxy |
-| `force_https` | Force the `Secure` flag on cookies - enable behind a TLS proxy |
+| `trusted_proxy` | Trust `X-Forwarded-*`, enable when behind a reverse proxy |
+| `force_https` | Force the `Secure` flag on cookies, enable behind a TLS proxy |
 | `base_url` | Public URL, e.g. `https://weebsync.example.com` |
 | `secret` | AES-GCM key for stored server passwords. Empty = auto-generated in `/config/secret.key` |
 | `anilist_token` | AniList API token (higher rate limit) |
@@ -43,7 +43,7 @@ lock the field.
 
 Set `trusted_proxy: true`, `force_https: true`, `base_url: https://weebsync.example.com`,
 and the `oidc_*` options. The redirect URL is
-`https://weebsync.example.com/api/auth/oidc/callback` - register it with your provider.
+`https://weebsync.example.com/api/auth/oidc/callback`, register it with your provider.
 
 ## Ports
 

@@ -2,7 +2,7 @@ name: track-upstream
 
 # Bumps the add-on version whenever the tracked upstream image digest changes,
 # so Home Assistant surfaces it as an available update. The tag it follows is
-# read from weebsync/build.yaml (WEEBSYNC_IMAGE) - currently :nightly.
+# read from weebsync/build.yaml (WEEBSYNC_IMAGE), currently :nightly.
 on:
   schedule:
     - cron: "*/30 * * * *"
@@ -48,7 +48,7 @@ jobs:
           set -euo pipefail
           CUR=$(cat weebsync/.upstream-digest 2>/dev/null || echo "")
           if [ "$NEW" = "$CUR" ]; then
-            echo "digest unchanged - nothing to do"
+            echo "digest unchanged, nothing to do"
             exit 0
           fi
           VER=$(date -u +%Y.%-m.%d%H%M%S)
