@@ -32,7 +32,8 @@ lock the field.
 |---|---|
 | `tz` | Timezone for log timestamps (e.g. `Europe/Berlin`) |
 | `downloads_dir` | Download root, or `:`-separated roots (mapped to `media`/`share`) |
-| `trusted_proxy` | Trust `X-Forwarded-*`, enable when behind a reverse proxy |
+| `trusted_proxies` | Reverse proxies whose `X-Forwarded-*` headers to believe, as a comma-separated list of IPs/CIDRs (e.g. `172.30.0.0/16`) |
+| `trusted_proxy` | Older blanket form of the above: trust whatever proxy the request arrives from. `trusted_proxies` wins when both are set |
 | `force_https` | Force the `Secure` flag on cookies, enable behind a TLS proxy |
 | `base_url` | Public URL, e.g. `https://weebsync.example.com` |
 | `secret` | AES-GCM key for stored server passwords. Empty = auto-generated in `/config/secret.key` |
@@ -41,9 +42,21 @@ lock the field.
 
 ### Behind a reverse proxy + OIDC
 
-Set `trusted_proxy: true`, `force_https: true`, `base_url: https://weebsync.example.com`,
-and the `oidc_*` options. The redirect URL is
-`https://weebsync.example.com/api/auth/oidc/callback`, register it with your provider.
+Set `trusted_proxies` to the address your proxy talks to WeebSync from (for a
+Home Assistant add-on that is usually `172.30.0.0/16`), `force_https: true`,
+`base_url: https://weebsync.example.com`, and the `oidc_*` options. The redirect
+URL is `https://weebsync.example.com/api/auth/oidc/callback`, register it with
+your provider.
+
+Naming the proxy matters: without it every request looks like it comes from the
+proxy, so the per-IP login rate limit lumps all callers into one bucket. Trusting
+`X-Forwarded-For` from *anywhere* is worse - a client reachable directly could
+then choose its own address and slip past that limit.
+
+**Both options are optional.** Leave them unset and the same two settings can be
+configured in WeebSync itself, under Settings -> Security. Set here, they win
+over the stored value and the app shows the field locked with an `ENV` badge, so
+the two ways of running the app never disagree about which value is in effect.
 
 ## Ports
 

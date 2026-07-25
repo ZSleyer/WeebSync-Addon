@@ -23,6 +23,7 @@ options:
   tz: Europe/Berlin
   downloads_dir: /media/weebsync
   trusted_proxy: false
+  trusted_proxies: ""
   force_https: false
   base_url: ""
   secret: ""
@@ -39,6 +40,7 @@ schema:
   tz: str?
   downloads_dir: str?
   trusted_proxy: bool?
+  trusted_proxies: str?
   force_https: bool?
   base_url: str?
   secret: password?

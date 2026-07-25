@@ -31,8 +31,19 @@ set_if oidc_claim         OIDC_CLAIM
 set_if oidc_admin_values  OIDC_ADMIN_VALUES
 set_if oidc_user_values   OIDC_USER_VALUES
 
-[ "$(opt trusted_proxy false)" = "true" ] && export WEEBSYNC_TRUSTED_PROXY=true || true
-[ "$(opt force_https false)"   = "true" ] && export WEEBSYNC_FORCE_HTTPS=true   || true
+# Reverse-proxy posture. Both are settings in the app's own UI as well, so an
+# option left unset here deliberately exports nothing - the environment always
+# wins over the stored value and would lock the field in the UI.
+# trusted_proxies (a CIDR list) is the precise form and names which proxies to
+# believe; trusted_proxy=true is the older blanket "trust whatever is in front
+# of me" and keeps working.
+TP="$(opt trusted_proxies "")"
+if [ -n "$TP" ]; then
+  export WEEBSYNC_TRUSTED_PROXY="$TP"
+elif [ "$(opt trusted_proxy false)" = "true" ]; then
+  export WEEBSYNC_TRUSTED_PROXY=true
+fi
+[ "$(opt force_https false)" = "true" ] && export WEEBSYNC_FORCE_HTTPS=true || true
 
 # downloads_dir may be a ":"-separated allowlist of roots (e.g. "/media:/share")
 # so targets can live under any mounted path; create each one.
