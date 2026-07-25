@@ -1,8 +1,10 @@
 name: track-upstream
 
 # Bumps the add-on version whenever the tracked upstream image digest changes,
-# so Home Assistant surfaces it as an available update. The tag it follows is
-# read from weebsync/build.yaml (WEEBSYNC_IMAGE), currently :nightly.
+# so Home Assistant surfaces it as an available update, and pins that digest in
+# weebsync/build.yaml so the build cannot serve a stale local copy of the tag.
+# WEEBSYNC_IMAGE holds repo:tag@digest - the tag (currently :nightly) is what
+# this resolves against, the digest is what gets built.
 on:
   schedule:
     - cron: "*/30 * * * *"
@@ -27,9 +29,10 @@ jobs:
         run: |
           set -euo pipefail
           IMAGE=$(sed -n 's/.*WEEBSYNC_IMAGE: *//p' weebsync/build.yaml | head -1)
-          REPO=${IMAGE%:*}; TAG=${IMAGE##*:}
+          REF=${IMAGE%@*} # drop the pinned digest, keep repo:tag
+          REPO=${REF%:*}; TAG=${REF##*:}
           PATH_=${REPO#ghcr.io/}
-          echo "image=$IMAGE"
+          echo "image=$IMAGE ref=$REF"
           TOKEN=$(curl -s "https://ghcr.io/token?scope=repository:${PATH_}:pull" | jq -r .token)
           DIGEST=$(curl -sI \
             -H "Authorization: Bearer $TOKEN" \
@@ -46,14 +49,18 @@ jobs:
           NEW: ${{ steps.up.outputs.digest }}
         run: |
           set -euo pipefail
-          CUR=$(cat weebsync/.upstream-digest 2>/dev/null || echo "")
+          # build.yaml is the single source of what we ship: the pin IS the
+          # record of the last tracked digest, so there is no second file to
+          # drift out of step with it.
+          CUR=$(sed -n 's/.*WEEBSYNC_IMAGE: *//p' weebsync/build.yaml | head -1 | sed -n 's/.*@//p')
           if [ "$NEW" = "$CUR" ]; then
             echo "digest unchanged, nothing to do"
             exit 0
           fi
           VER=$(date -u +%Y.%-m.%d%H%M%S)
           sed -i -E "s/^version: .*/version: \"$VER\"/" weebsync/config.yaml
-          printf '%s\n' "$NEW" > weebsync/.upstream-digest
+          # repin: replace everything after the tag, keeping repo:tag intact
+          sed -i -E "s|(WEEBSYNC_IMAGE: [^@]+)(@.*)?$|\1@$NEW|" weebsync/build.yaml
           git config user.name "weebsync-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -am "chore: track upstream $VER ($NEW)"

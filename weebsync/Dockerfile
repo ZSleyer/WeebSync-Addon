@@ -1,7 +1,9 @@
 # Global build args (must precede the first FROM to be usable in FROM lines)
 ARG BUILD_FROM
 # the fallback only applies to a bare `docker build`; the add-on build passes
-# WEEBSYNC_IMAGE from build.yaml. Keep the two in step: :dev no longer exists.
+# WEEBSYNC_IMAGE from build.yaml, where it is pinned to a digest so the build
+# host cannot substitute an older copy of the tag. Unpinned here on purpose: a
+# hand-run build should follow the channel, not a digest frozen in this file.
 ARG WEEBSYNC_IMAGE=ghcr.io/zsleyer/weebsync:nightly
 
 # WeebSync app image (static Go binary + prebuilt web assets)
