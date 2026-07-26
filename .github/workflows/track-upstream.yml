@@ -6,8 +6,12 @@ name: track-upstream
 # WEEBSYNC_IMAGE holds repo:tag@digest - the tag (currently :nightly) is what
 # this resolves against, the digest is what gets built.
 on:
+  # WeebSync's nightly build fires this right after pushing the image; the cron
+  # is only the safety net for a dispatch that got lost or an out-of-band push.
+  repository_dispatch:
+    types: [upstream-image]
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "17 5 * * *"
   workflow_dispatch:
   push:
     branches: [main]
