@@ -3,11 +3,12 @@ name: track-upstream
 # Bumps the add-on version whenever the tracked upstream image digest changes,
 # so Home Assistant surfaces it as an available update, and pins that digest in
 # weebsync/build.yaml so the build cannot serve a stale local copy of the tag.
-# WEEBSYNC_IMAGE holds repo:tag@digest - the tag (currently :nightly) is what
-# this resolves against, the digest is what gets built.
+# WEEBSYNC_IMAGE holds repo:tag@digest - the tag (currently :dev) is what this
+# resolves against, the digest is what gets built.
 on:
-  # WeebSync's nightly build fires this right after pushing the image; the cron
-  # is only the safety net for a dispatch that got lost or an out-of-band push.
+  # WeebSync fires this right after pushing an image, from both the per-push
+  # dev build and the nightly one; the cron is only the safety net for a
+  # dispatch that got lost or an out-of-band push.
   repository_dispatch:
     types: [upstream-image]
   schedule:

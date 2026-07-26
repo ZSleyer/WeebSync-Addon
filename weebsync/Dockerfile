@@ -4,7 +4,7 @@ ARG BUILD_FROM
 # WEEBSYNC_IMAGE from build.yaml, where it is pinned to a digest so the build
 # host cannot substitute an older copy of the tag. Unpinned here on purpose: a
 # hand-run build should follow the channel, not a digest frozen in this file.
-ARG WEEBSYNC_IMAGE=ghcr.io/zsleyer/weebsync:nightly
+ARG WEEBSYNC_IMAGE=ghcr.io/zsleyer/weebsync:dev
 
 # WeebSync app image (static Go binary + prebuilt web assets)
 FROM ${WEEBSYNC_IMAGE} AS app

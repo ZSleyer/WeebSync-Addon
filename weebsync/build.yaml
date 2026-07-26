@@ -3,11 +3,11 @@ build_from:
   amd64: ghcr.io/hassio-addons/base:stable
 args:
   # repo:tag@digest. The tag names the channel we follow, the digest is what
-  # actually gets built. Without it Docker resolves ":nightly" against whatever
+  # actually gets built. Without it Docker resolves the tag against whatever
   # copy the host already has and never pulls, so a version bump could ship a
   # days-old binary while claiming to be new - which is exactly what happened
   # on 2026-07-25. track-upstream rewrites the digest and resolves against the
   # tag part.
-  WEEBSYNC_IMAGE: ghcr.io/zsleyer/weebsync:nightly@sha256:c098a635a717d544915718b1fcde30b26847f3d76aaa7bcbd4e5b09aa0e13e57
+  WEEBSYNC_IMAGE: ghcr.io/zsleyer/weebsync:dev@sha256:0008c8cc3b31b8ce8421293e0d29faff01b1107ba63688aa55e065d30edb0194
 labels:
   org.opencontainers.image.source: https://github.com/ZSleyer/WeebSync

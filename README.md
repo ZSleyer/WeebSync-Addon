@@ -22,11 +22,12 @@ Install **WeebSync** from the store afterwards. Its options are documented in
 The add-on wraps the prebuilt multi-arch image `ghcr.io/zsleyer/weebsync` and maps
 Home Assistant options onto the app's environment, so nothing is built here.
 
-`.github/workflows/track-upstream.yml` polls the digest of the tracked image every
-30 minutes and bumps the add-on version whenever it changes. Home Assistant then
-offers it like any other add-on update. The tag it follows is read from
-`weebsync/build.yaml` (`WEEBSYNC_IMAGE`), currently `:nightly`, which upstream
-rebuilds once a day from `main`.
+`.github/workflows/track-upstream.yml` bumps the add-on version whenever the digest
+of the tracked image changes. Home Assistant then offers it like any other add-on
+update. The tag it follows is read from `weebsync/build.yaml` (`WEEBSYNC_IMAGE`),
+currently `:dev`, which upstream rebuilds on every green push to `main`. The slower
+`:nightly` tag stays published alongside it for anyone who wants at most one update
+a day - switching channels means changing that one line.
 
 Home Assistant installs an update automatically only once that version is at least
 a day old, and it looks for updates every 16 hours, so an automatic upgrade lands
