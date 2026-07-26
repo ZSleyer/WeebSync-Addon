@@ -36,6 +36,10 @@ profile weebsync flags=(attach_disconnected,mediate_deleted) {
   /bin/sh mrix,
   /usr/bin/jq mrix,
   /usr/bin/weebsync mrix,
+  # reads the real resolution and the audio/subtitle tracks of a file. Denied,
+  # every language probe fails and the quality data stays empty - silently, the
+  # app treats an unreadable file as one it cannot judge.
+  /usr/bin/ffprobe mrix,
 
   # runtime linker + libraries (musl on Alpine base)
   /lib/** mr,
@@ -59,6 +63,12 @@ profile weebsync flags=(attach_disconnected,mediate_deleted) {
   /web/** r,
   /tmp/ r,
   /tmp/** rwk,
+  # SQLite's scratch space (the etilqs_* statement journals and temp b-trees).
+  # It looks at $SQLITE_TMPDIR, $TMPDIR, then /var/tmp before /tmp, and neither
+  # variable is set here - so /tmp alone was not enough and a large DELETE came
+  # back as "unable to open database file (14)".
+  /var/tmp/ r,
+  /var/tmp/** rwk,
 
   # cgroup v2: Go runtime reads cpu.max / memory.max to size GOMAXPROCS/GOMEMLIMIT
   /sys/fs/cgroup/** r,
