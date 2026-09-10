@@ -61,4 +61,4 @@ unset SUPERVISOR_TOKEN HASSIO_TOKEN
 # operator's (see DOCS: they must be writable for uid 65532). A failed drop
 # stops the add-on rather than falling back to root.
 chown -R 65532:65532 /config
-exec setpriv --reuid=65532 --regid=65532 --clear-groups --inh-caps=-all /usr/bin/weebsync
+exec su-exec 65532:65532 /usr/bin/weebsync

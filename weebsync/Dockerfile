@@ -13,7 +13,9 @@ FROM ${WEEBSYNC_IMAGE} AS app
 # ffmpeg gives ffprobe, used to read the true resolution / audio / subtitle
 # tracks of media whose file names lack those tokens.
 FROM ${BUILD_FROM}
-RUN apk add --no-cache jq tzdata ffmpeg
+# su-exec drops to the unprivileged user; the base image only has the
+# busybox setpriv, which cannot change the uid
+RUN apk add --no-cache jq tzdata ffmpeg su-exec
 
 COPY --from=app /weebsync /usr/bin/weebsync
 COPY --from=app /web /web

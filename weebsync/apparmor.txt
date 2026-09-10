@@ -23,8 +23,8 @@ profile weebsync flags=(attach_disconnected,mediate_deleted) {
 
   # The container starts with Docker's default capability set (the supervisor
   # drops nothing), so the profile names what the entrypoint needs to hand
-  # the config volume over and drop to the unprivileged user; the app itself
-  # runs without any. NET_RAW, MKNOD, SYS_CHROOT, SETFCAP, SETPCAP and
+  # the config volume over and drop to the unprivileged user (su-exec); the
+  # app itself runs without any. NET_RAW, MKNOD, SYS_CHROOT, SETFCAP, SETPCAP and
   # AUDIT_WRITE stay out.
   network,
   capability chown,
@@ -47,8 +47,7 @@ profile weebsync flags=(attach_disconnected,mediate_deleted) {
   /bin/busybox mrix,
   /bin/sh mrix,
   /usr/bin/jq mrix,
-  /usr/bin/setpriv mrix,
-  /bin/setpriv mrix,
+  /sbin/su-exec mrix,
   /usr/bin/weebsync mrix,
   # reads the real resolution and the audio/subtitle tracks of a file. Denied,
   # every language probe fails and the quality data stays empty - silently, the
