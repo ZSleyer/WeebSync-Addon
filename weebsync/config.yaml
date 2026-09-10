@@ -1,5 +1,5 @@
 name: WeebSync
-version: "2026.9.10201903"
+version: "2026.9.10205956"
 slug: weebsync
 description: "Download & sync anime folders from your own S/FTP servers: AniList/TMDB catalog, download manager, rename engine"
 url: https://github.com/ZSleyer/WeebSync-Addon
@@ -10,15 +10,13 @@ init: false
 startup: application
 boot: auto
 host_network: false
-webui: "http://[HOST]:[PORT:8080]"
 ports:
-  8080/tcp: 42380
+  8080/tcp: null
 ports_description:
   8080/tcp: WeebSync Web UI
 map:
   - addon_config:rw
   - media:rw
-  - share:rw
 options:
   tz: Europe/Berlin
   downloads_dir: /media/weebsync

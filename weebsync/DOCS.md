@@ -19,8 +19,9 @@ This add-on wraps the prebuilt image `ghcr.io/zsleyer/weebsync`, see
 
 - `/config` (add-on config): SQLite DB + `secret.key` (auto-generated, **back it up**)
 - `downloads_dir`: where downloads land (default `/media/weebsync`). Accepts a
-  single path, or a `:`-separated allowlist of roots (e.g. `/media:/share`) to
-  let targets live under any mounted path; the first is the default download root.
+  single path, or a `:`-separated allowlist of roots (e.g. `/media/anime:/media/tv`)
+  to let targets live under any of them; the first is the default download root.
+  Only `media` is mounted; the add-on gets no other host directory.
 
 ## Options
 
@@ -31,7 +32,7 @@ lock the field.
 | Option | Purpose |
 |---|---|
 | `tz` | Timezone for log timestamps (e.g. `Europe/Berlin`) |
-| `downloads_dir` | Download root, or `:`-separated roots (mapped to `media`/`share`) |
+| `downloads_dir` | Download root, or `:`-separated roots (all under the mounted `media`) |
 | `trusted_proxies` | Reverse proxies whose `X-Forwarded-*` headers to believe, as a comma-separated list of IPs/CIDRs (e.g. `172.30.0.0/16`) |
 | `trusted_proxy` | Older blanket form of the above: trust whatever proxy the request arrives from. `trusted_proxies` wins when both are set |
 | `force_https` | Force the `Secure` flag on cookies, enable behind a TLS proxy |
@@ -60,5 +61,10 @@ the two ways of running the app never disagree about which value is in effect.
 
 ## Ports
 
-Internal `8080` is published on host `42380` by default (change under the add-on's
-Network tab). Point your reverse proxy at the add-on on port `8080`.
+Internal `8080` is not published on the host by default. Point your reverse
+proxy at the add-on's hostname on port `8080` (`8fbcfe04-weebsync:8080` from
+another add-on such as Nginx Proxy Manager). A published host port sits behind
+Docker's proxy, which hands the app a source address inside the add-on
+network - the one `trusted_proxies` is meant for - so anything reaching that
+port could set `X-Forwarded-For` itself. Publish it under the Network tab only
+for a LAN-only install without a proxy.
