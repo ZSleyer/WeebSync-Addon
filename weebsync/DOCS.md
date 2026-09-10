@@ -59,6 +59,19 @@ configured in WeebSync itself, under Settings -> Security. Set here, they win
 over the stored value and the app shows the field locked with an `ENV` badge, so
 the two ways of running the app never disagree about which value is in effect.
 
+## User
+
+The add-on drops to the unprivileged user `65532` before it starts the app
+(the same user the upstream image runs as); the config volume is owned by it.
+Download roots under `media` therefore have to be writable for that user:
+folders created by an earlier, root-running version keep root as owner, so
+after the upgrade run once on the host
+
+    find /var/lib/homeassistant/media/<your roots> -user 0 -exec chown 65532:65532 {} +
+
+or give the folders a group the user is in. A download into a folder the
+user cannot write to fails with a permission error in the queue, nothing else.
+
 ## Ports
 
 Internal `8080` is not published on the host by default. Point your reverse

@@ -51,4 +51,14 @@ OLDIFS=$IFS; IFS=:
 for d in $WEEBSYNC_DOWNLOADS; do [ -n "$d" ] && mkdir -p "$d"; done
 IFS=$OLDIFS
 echo "[weebsync] data=$WEEBSYNC_DATA downloads=$WEEBSYNC_DOWNLOADS oidc=${OIDC_ISSUER:-off}"
-exec /usr/bin/weebsync
+
+# The app never talks to the Supervisor; a process that gets taken over must
+# not inherit the token that could.
+unset SUPERVISOR_TOKEN HASSIO_TOKEN
+
+# Run as the same unprivileged user the upstream image uses. The config
+# volume is small and ours, so it follows the user; the media roots are the
+# operator's (see DOCS: they must be writable for uid 65532). A failed drop
+# stops the add-on rather than falling back to root.
+chown -R 65532:65532 /config
+exec setpriv --reuid=65532 --regid=65532 --clear-groups --inh-caps=-all /usr/bin/weebsync
