@@ -1,7 +1,7 @@
 # WeebSync Home Assistant Add-on
 
 Home Assistant add-on repository for [WeebSync](https://github.com/ZSleyer/WeebSync):
-download and sync anime folders from your own S/FTP servers, with an AniList/TMDB
+download and sync files and folders from your own S/FTP servers, with an metadata
 catalog, a download manager with live speed throttling, and a rename engine.
 
 > **Early, use at your own risk.** Not a mature or well-tested app.
