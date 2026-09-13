@@ -8,6 +8,6 @@ args:
   # days-old binary while claiming to be new - which is exactly what happened
   # on 2026-07-25. track-upstream rewrites the digest and resolves against the
   # tag part.
-  WEEBSYNC_IMAGE: ghcr.io/zsleyer/weebsync:dev@sha256:404f2448f29a6957dd8ac0957568b31f713cac577cc407c4256210fe60625d25
+  WEEBSYNC_IMAGE: ghcr.io/zsleyer/weebsync:dev@sha256:aa808cc13f88a23eca75a95e8befd60f6c7581d7c89d5c17a75d814211ac5ee5
 labels:
   org.opencontainers.image.source: https://github.com/ZSleyer/WeebSync
