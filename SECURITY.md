@@ -13,7 +13,7 @@ s6 services, or how Home Assistant options reach the container.
 ## Supported versions
 
 Only the latest published add-on version, which tracks
-`ghcr.io/zsleyer/weebsync:latest`.
+`ghcr.io/zsleyer/weebsync:dev`.
 
 ## What the add-on exposes
 
