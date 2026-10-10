@@ -53,6 +53,10 @@ profile weebsync flags=(attach_disconnected,mediate_deleted) {
   # every language probe fails and the quality data stays empty - silently, the
   # app treats an unreadable file as one it cannot judge.
   /usr/bin/ffprobe mrix,
+  # the player: transcodes what the browser cannot decode, extracts subtitle
+  # tracks and font attachments. Denied, every one of those fails silently and
+  # only files the browser plays natively still work.
+  /usr/bin/ffmpeg mrix,
 
   # runtime linker + libraries (musl on Alpine base)
   /lib/** mr,
