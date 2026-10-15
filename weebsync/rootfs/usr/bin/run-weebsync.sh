@@ -44,6 +44,7 @@ elif [ "$(opt trusted_proxy false)" = "true" ]; then
   export WEEBSYNC_TRUSTED_PROXY=true
 fi
 [ "$(opt force_https false)" = "true" ] && export WEEBSYNC_FORCE_HTTPS=true || true
+set_if hwaccel           WEEBSYNC_HWACCEL
 
 # downloads_dir may be a ":"-separated allowlist of roots (e.g. "/media:/share")
 # so targets can live under any mounted path; create each one.
@@ -61,4 +62,14 @@ unset SUPERVISOR_TOKEN HASSIO_TOKEN
 # operator's (see DOCS: they must be writable for uid 65532). A failed drop
 # stops the add-on rather than falling back to root.
 chown -R 65532:65532 /config
-exec su-exec 65532:65532 /usr/bin/weebsync
+
+# The GPU's render nodes belong to a host group whose id differs per system.
+# The app user joins each such id under a name of its own (a second line for
+# an id the image already knows is fine), so the drop below keeps access.
+for n in /dev/dri/renderD*; do
+  [ -e "$n" ] || continue
+  g="$(stat -c %g "$n")"
+  grep -q "^hostgpu$g:" /etc/group || echo "hostgpu$g:x:$g:weebsync" >> /etc/group
+done
+
+exec su-exec weebsync /usr/bin/weebsync

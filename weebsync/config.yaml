@@ -10,6 +10,9 @@ init: false
 startup: application
 boot: auto
 host_network: false
+# the GPU's render nodes (/dev/dri, DRM major 226) for transcoding in the
+# player; without a GPU encoder the app transcodes in software as before
+video: true
 ports:
   8080/tcp: null
 ports_description:
@@ -34,6 +37,7 @@ options:
   oidc_claim: ""
   oidc_admin_values: ""
   oidc_user_values: ""
+  hwaccel: auto
 schema:
   tz: str?
   downloads_dir: str?
@@ -51,3 +55,4 @@ schema:
   oidc_claim: str?
   oidc_admin_values: str?
   oidc_user_values: str?
+  hwaccel: list(auto|vaapi|none)?

@@ -39,6 +39,7 @@ lock the field.
 | `base_url` | Public URL, e.g. `https://weebsync.example.com` |
 | `secret` | AES-GCM key for stored server passwords. Empty = auto-generated in `/config/secret.key` |
 | `anilist_token` | AniList API token (higher rate limit) |
+| `hwaccel` | Encoder for the player's transcodes: `auto` (default) uses an Intel or AMD GPU when there is one, `vaapi` only that, `none` always software. See below |
 | `oidc_*` | Generic OIDC login: issuer, client id/secret, redirect URL, provider name, and role mapping via `oidc_claim` (e.g. `groups`) + `oidc_admin_values`/`oidc_user_values` (comma-separated) |
 
 ### Behind a reverse proxy + OIDC
@@ -58,6 +59,15 @@ then choose its own address and slip past that limit.
 configured in WeebSync itself, under Settings -> Security. Set here, they win
 over the stored value and the app shows the field locked with an `ENV` badge, so
 the two ways of running the app never disagree about which value is in effect.
+
+## GPU transcoding
+
+What the browser cannot play, the player transcodes. On an amd64 host with an
+Intel or AMD GPU that runs on the GPU through VA-API and writes 1080p; without
+one (a Raspberry Pi has no H.264 encoder) it runs in software at 720p. The
+add-on gets the GPU's render nodes (`video: true`) and joins their group on
+start; the log says which encoder it picked (`player transcodes on the GPU`).
+NVIDIA cards are not supported in the add-on.
 
 ## User
 

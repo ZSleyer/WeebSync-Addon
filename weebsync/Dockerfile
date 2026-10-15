@@ -13,9 +13,17 @@ FROM ${WEEBSYNC_IMAGE} AS app
 # ffmpeg gives ffprobe, used to read the true resolution / audio / subtitle
 # tracks of media whose file names lack those tokens.
 FROM ${BUILD_FROM}
+ARG BUILD_ARCH
 # su-exec drops to the unprivileged user; the base image only has the
-# busybox setpriv, which cannot change the uid
-RUN apk add --no-cache jq tzdata ffmpeg su-exec
+# busybox setpriv, which cannot change the uid. The user exists by name so
+# su-exec keeps the groups the entrypoint adds for the GPU (see
+# run-weebsync.sh); with a bare uid:gid it drops every supplementary group.
+# On amd64 the VA-API drivers let the player transcode on an Intel or AMD GPU;
+# a Raspberry Pi has no H.264 encoder, so aarch64 stays without.
+RUN apk add --no-cache jq tzdata ffmpeg su-exec \
+    && if [ "$BUILD_ARCH" = amd64 ]; then apk add --no-cache intel-media-driver mesa-va-gallium; fi \
+    && addgroup -g 65532 weebsync \
+    && adduser -D -H -u 65532 -G weebsync weebsync
 
 COPY --from=app /weebsync /usr/bin/weebsync
 COPY --from=app /web /web
