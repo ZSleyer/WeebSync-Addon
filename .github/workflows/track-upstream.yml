@@ -167,6 +167,9 @@ jobs:
           tags: ghcr.io/zsleyer/${{ matrix.arch }}-weebsync-addon:${{ needs.plan.outputs.version }}
           labels: |
             org.opencontainers.image.source=https://github.com/ZSleyer/WeebSync-Addon
+            io.hass.version=${{ needs.plan.outputs.version }}
+            io.hass.type=addon
+            io.hass.arch=${{ matrix.arch }}
           build-args: |
             BUILD_FROM=${{ steps.args.outputs.build_from }}
             BUILD_ARCH=${{ matrix.arch }}
