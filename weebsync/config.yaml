@@ -3,6 +3,9 @@ version: "2026.11.03223628"
 slug: weebsync
 description: "Download & sync anime folders from your own S/FTP servers: AniList/TMDB catalog, download manager, rename engine"
 url: https://github.com/ZSleyer/WeebSync-Addon
+# Prebuilt by .github/workflows/track-upstream.yml; the Supervisor pulls
+# {arch}-weebsync-addon:<version> instead of building on the host.
+image: ghcr.io/zsleyer/{arch}-weebsync-addon
 arch:
   - aarch64
   - amd64
