@@ -11,7 +11,7 @@ name: track-upstream
 # deleted: restoring a backup pulls exactly the version it was taken with.
 #
 # WEEBSYNC_IMAGE in weebsync/build.yaml holds repo:tag@digest - the tag
-# (currently :dev) is what this resolves against, the digest is what gets built.
+# (currently :latest) is what this resolves against, the digest is what gets built.
 on:
   # WeebSync fires this right after pushing an image, from both the per-push
   # dev build and the nightly one; the cron is only the safety net for a

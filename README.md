@@ -30,9 +30,9 @@ digest of the tracked image changes or the wrapper changes on `main`: it builds 
 pushes the image for both architectures first and only then commits the new version.
 Home Assistant then offers it like any other add-on update. Old image tags are kept
 on purpose, since restoring a backup pulls exactly the version it was taken with. The tag it follows is read from `weebsync/build.yaml` (`WEEBSYNC_IMAGE`),
-currently `:dev`, which upstream rebuilds on every green push to `main`. The slower
-`:nightly` tag stays published alongside it for anyone who wants at most one update
-a day - switching channels means changing that one line.
+currently `:latest`, the newest stable release. `:dev` (every green push to `main`)
+and `:nightly` (at most one update a day) stay published for anyone who wants to
+follow development - switching channels means changing that one line.
 
 Home Assistant installs an update automatically only once that version is at least
 a day old, and it looks for updates every 16 hours, so an automatic upgrade lands
