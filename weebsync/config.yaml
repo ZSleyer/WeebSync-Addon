@@ -59,3 +59,6 @@ schema:
   oidc_admin_values: str?
   oidc_user_values: str?
   hwaccel: list(auto|vaapi|none)?
+  # run as this uid/gid instead of 65532 (gid defaults to uid; root is refused)
+  uid: int(1,65534)?
+  gid: int(1,65534)?

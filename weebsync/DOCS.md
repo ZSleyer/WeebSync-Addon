@@ -73,6 +73,10 @@ NVIDIA cards are not supported in the add-on.
 
 The add-on drops to the unprivileged user `65532` before it starts the app
 (the same user the upstream image runs as); the config volume is owned by it.
+To run under the uid/gid your media share already uses instead (for example
+`1000`, so downloads get the same owner as everything else), set the options
+`uid` and `gid` (`gid` defaults to `uid`; root is not allowed). On the next
+start the config volume is handed over to that user.
 Download roots under `media` therefore have to be writable for that user:
 folders created by an earlier, root-running version keep root as owner, so
 after the upgrade run once on the host

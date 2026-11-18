@@ -57,11 +57,25 @@ echo "[weebsync] data=$WEEBSYNC_DATA downloads=$WEEBSYNC_DOWNLOADS oidc=${OIDC_I
 # not inherit the token that could.
 unset SUPERVISOR_TOKEN HASSIO_TOKEN
 
-# Run as the same unprivileged user the upstream image uses. The config
-# volume is small and ours, so it follows the user; the media roots are the
-# operator's (see DOCS: they must be writable for uid 65532). A failed drop
-# stops the add-on rather than falling back to root.
-chown -R 65532:65532 /config
+# Run as the same unprivileged user the upstream image uses (65532), or as
+# the uid/gid the options name, so downloads land with the owner the rest of
+# the media share uses. The user keeps its name, so su-exec still carries the
+# GPU groups added below. The config volume is small and ours, so it follows
+# the user; the media roots are the operator's (see DOCS: they must be
+# writable for that user). A failed drop stops the add-on rather than falling
+# back to root.
+RUN_UID="$(opt uid 65532)"
+RUN_GID="$(opt gid "$RUN_UID")"
+for id in "$RUN_UID" "$RUN_GID"; do
+  case "$id" in ''|*[!0-9]*) echo "[weebsync] uid/gid must be a number, got '$id'" >&2; exit 1 ;; esac
+  [ "$id" -ge 1 ] && [ "$id" -le 65534 ] || { echo "[weebsync] uid/gid $id out of range 1-65534 (root is not allowed)" >&2; exit 1; }
+done
+if [ "$RUN_UID" != 65532 ] || [ "$RUN_GID" != 65532 ]; then
+  sed -i "s/^weebsync:x:[0-9]*:[0-9]*:/weebsync:x:$RUN_UID:$RUN_GID:/" /etc/passwd
+  sed -i "s/^weebsync:x:[0-9]*:/weebsync:x:$RUN_GID:/" /etc/group
+fi
+echo "[weebsync] running as uid=$RUN_UID gid=$RUN_GID"
+chown -R "$RUN_UID:$RUN_GID" /config
 
 # The GPU's render nodes belong to a host group whose id differs per system.
 # The app user joins each such id under a name of its own (a second line for
