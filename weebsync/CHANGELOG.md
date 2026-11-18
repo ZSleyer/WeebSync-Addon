@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026.11.1.1
+
+WeebSync [`6170e2d`](https://github.com/ZSleyer/WeebSync/commit/6170e2dc98edc6acb303934fa7a25f07bb3cb8d6)
+
+Add-on:
+
+- fix: rewrite the user's ids in place so AppArmor lets the uid option work
+
 ## 2026.11.1
 
 WeebSync [`6170e2d`](https://github.com/ZSleyer/WeebSync/commit/6170e2dc98edc6acb303934fa7a25f07bb3cb8d6)
