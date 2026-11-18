@@ -71,8 +71,12 @@ for id in "$RUN_UID" "$RUN_GID"; do
   [ "$id" -ge 1 ] && [ "$id" -le 65534 ] || { echo "[weebsync] uid/gid $id out of range 1-65534 (root is not allowed)" >&2; exit 1; }
 done
 if [ "$RUN_UID" != 65532 ] || [ "$RUN_GID" != 65532 ]; then
-  sed -i "s/^weebsync:x:[0-9]*:[0-9]*:/weebsync:x:$RUN_UID:$RUN_GID:/" /etc/passwd
-  sed -i "s/^weebsync:x:[0-9]*:/weebsync:x:$RUN_GID:/" /etc/group
+  # Rewritten in place: sed -i would need a temp file in /etc, which the
+  # AppArmor profile does not allow.
+  pw="$(sed "s/^weebsync:x:[0-9]*:[0-9]*:/weebsync:x:$RUN_UID:$RUN_GID:/" /etc/passwd)"
+  printf '%s\n' "$pw" > /etc/passwd
+  gr="$(sed "s/^weebsync:x:[0-9]*:/weebsync:x:$RUN_GID:/" /etc/group)"
+  printf '%s\n' "$gr" > /etc/group
 fi
 echo "[weebsync] running as uid=$RUN_UID gid=$RUN_GID"
 chown -R "$RUN_UID:$RUN_GID" /config

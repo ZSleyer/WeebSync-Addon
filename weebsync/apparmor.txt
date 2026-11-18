@@ -63,8 +63,10 @@ profile weebsync flags=(attach_disconnected,mediate_deleted) {
   /lib/** mr,
   /usr/lib/** mr,
   /etc/** r,
-  # the entrypoint lets the app user join the render nodes' host group
+  # the entrypoint lets the app user join the render nodes' host group and,
+  # with the uid/gid options, rewrites the app user's ids (in place, no temp files)
   /etc/group w,
+  /etc/passwd w,
 
   # --- data & mapped volumes (config = sqlite DB + secret.key, media =
   #     download targets, data = options.json). 'k' = file locking, which SQLite
