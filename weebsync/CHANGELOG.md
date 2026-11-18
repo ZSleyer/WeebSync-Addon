@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026.11.1
+
+WeebSync [`6170e2d`](https://github.com/ZSleyer/WeebSync/commit/6170e2dc98edc6acb303934fa7a25f07bb3cb8d6)
+
+Add-on:
+
+- feat: options uid and gid to run as the media share's owner
+
 ## 2026.11.0.30
 
 WeebSync [`6170e2d`](https://github.com/ZSleyer/WeebSync/commit/6170e2dc98edc6acb303934fa7a25f07bb3cb8d6)
